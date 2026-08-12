@@ -51,10 +51,13 @@ The following arguments are supported:
 * `apply_configurations` - (Optional) Whether to apply added or changed configurations of the load balancer and related resources
 * `system_update` - (Optional) Whether to apply the system update to the load balancer
     * Structure is [documented below](#system-update)
+* `change_plan` - (Optional) ID of the plan that the load balancer will be changed to
 
 <a name="system-update"></a>The `system_update` block contains:
 
 * `system_update_id` - ID of the system update that will be applied to the load balancer
+* `rollback` - (Optional) Rollback the load balancer to the version prior to the specified system update
+    * The target system update must allow rollback (`is_rollback_allowed: true`)
 
 ## Attributes Reference
 
@@ -64,3 +67,4 @@ In addition, the following attributes are exported:
 * `load_balancer_id` - See argument reference above.
 * `apply_configurations` - See argument reference above.
 * `system_update` - See argument reference above.
+* `change_plan` - See argument reference above.
