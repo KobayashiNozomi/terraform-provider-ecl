@@ -43,6 +43,25 @@ resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
 }
 ```
 
+To change the plan of the load balancer, specify the same plan ID in both `plan_id` of `ecl_mlb_load_balancer_v1` and `change_plan` of `ecl_mlb_load_balancer_action_v1`:
+
+```hcl
+data "ecl_mlb_plan_v1" "plan_200m_ha_4if" {
+  name = "200M_HA_4IF"
+}
+
+resource "ecl_mlb_load_balancer_v1" "load_balancer" {
+  name    = "load_balancer"
+  plan_id = data.ecl_mlb_plan_v1.plan_200m_ha_4if.id
+  # ...
+}
+
+resource "ecl_mlb_load_balancer_action_v1" "load_balancer_action" {
+  load_balancer_id = ecl_mlb_load_balancer_v1.load_balancer.id
+  change_plan      = data.ecl_mlb_plan_v1.plan_200m_ha_4if.id
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -52,6 +71,8 @@ The following arguments are supported:
 * `system_update` - (Optional) Whether to apply the system update to the load balancer
     * Structure is [documented below](#system-update)
 * `change_plan` - (Optional) ID of the plan that the load balancer will be changed to
+    * After the plan is changed, update `plan_id` of the corresponding `ecl_mlb_load_balancer_v1` to the same value
+    * If `plan_id` is not updated, the next `terraform plan` will detect it as a diff
 
 <a name="system-update"></a>The `system_update` block contains:
 

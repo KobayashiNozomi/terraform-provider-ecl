@@ -56,6 +56,7 @@ func resourceMLBLoadBalancerActionV1() *schema.Resource {
 						},
 					},
 				},
+				ValidateFunc: validateMLBLoadBalancerActionV1SystemUpdateKeys,
 			},
 			"change_plan": &schema.Schema{
 				Type:     schema.TypeString,
@@ -65,6 +66,18 @@ func resourceMLBLoadBalancerActionV1() *schema.Resource {
 	}
 
 	return result
+}
+
+func validateMLBLoadBalancerActionV1SystemUpdateKeys(v interface{}, k string) ([]string, []error) {
+	var errs []error
+
+	for key := range v.(map[string]interface{}) {
+		if key != "system_update_id" && key != "rollback" {
+			errs = append(errs, fmt.Errorf("%s: unsupported key %q", k, key))
+		}
+	}
+
+	return nil, errs
 }
 
 func resourceMLBLoadBalancerActionV1CheckApplyConfigurationsRequired(d *schema.ResourceData, client *eclcloud.ServiceClient) (bool, error) {
